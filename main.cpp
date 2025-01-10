@@ -1,4 +1,5 @@
 #include <iostream>
+#include <climits>
 using namespace std;
 
 void my_swap(int *a, int *b){
@@ -16,6 +17,10 @@ struct MinHeap{
         heap_size = 0;
         heap_capacity = val;
         heap_arr = new int[val];
+    }
+
+    ~MinHeap() {
+        delete[] heap_arr;
     }
 
     void MinHeapify(int i){
@@ -77,6 +82,10 @@ struct MaxHeap{
         heap_arr = new int[val];
     }
 
+    ~MaxHeap() {
+        delete [] heap_arr;
+    }
+
     void MaxHeapify(int i){
         int l = left(i);
         int r = right(i);
@@ -117,6 +126,7 @@ struct MaxHeap{
             my_swap(&heap_arr[i], &heap_arr[parent(i)]);
             i = parent(i);
         }
+        MaxHeapify(0);
     }
 
     void insert(int k){
@@ -141,15 +151,15 @@ int main() {
     std::cout.tie(nullptr);
     std::cin.tie(nullptr);
 
-    int n, o, price, tax, extra_price;
+    int n, opertion_number, price, tax, extra_price;
     char flag;
     std::cin >> n;
     for (int i = 0; i < n; i++) {
-        std::cin >> o;
-        MinHeap tax_heap = MinHeap(o);
-        MaxHeap price_heap = MaxHeap(o);
+        std::cin >> opertion_number;
+        MinHeap tax_heap = MinHeap(opertion_number);
+        MaxHeap price_heap = MaxHeap(opertion_number);
         int total_tax = 0;
-        for (int j = 0; j < o; j++) {
+        for (int j = 0; j < opertion_number; j++) {
             std::cin >> flag;
             switch (flag) {
                 case 'a': {
@@ -160,6 +170,7 @@ int main() {
                 }
                 case 'p': {
                     std::cin >> extra_price;
+                    if (price_heap.heap_size > 0 && price_heap.getMax() + extra_price > 0)
                     price_heap.editAt(0, price_heap.getMax() + extra_price);
                     break;
                 }
